@@ -13,13 +13,15 @@ Array.matrix = function (m, initial) {
 var baseBoard = function (spec) {
 	var players = ['A', 'B'];
 	var playerIndex = 0;
+	var board = Array.matrix(spec.size, false);
+	var lastMove = null;
 
 	var getCurrentPlayer = function () {
 		return players[playerIndex];
 	};
 
 	var makeMove = function (move) {
-		spec.placement(move.x, move.y);
+		lastMove = spec.placement(board, move.x, move.y);
 	};
 
 	var generateRandomMove = function () {
@@ -31,28 +33,36 @@ var baseBoard = function (spec) {
 
 	var outputStatus = function () {
 		for(var i = 0;i < spec.size;i++) {
+			var rowStr = "";
 			for(var j = 0; j < spec.size;j++) {
-
+				if (!board[i][j]) {
+					rowStr += "-";
+				} else {
+					rowStr += board[i][j];
+				}
 			}
+			console.log(rowStr);
 		}
 	};
 
+	var advancePlayer = function () {
+		playerIndex = (playerIndex + 1) % players.length;
+		return this.player();
+	};
+
+	var inBoard
+	var contiguousElements = function (direction) {
+		var lastPlayer = board[lastMove.x][lastMove.y];
+		var origin = { x: lastMove.x, y: lastMove.y };
+	};
+
 	return {
-		board: Array.matrix(spec.size, false),
-
-		over: false,
-
 		player: function () {
 			getCurrentPlayer();
 		},
-
-		advancePlayer: function () {
-			playerIndex = (playerIndex + 1) % players.length;
-			return this.player();
-		},
 		
 		connectionVertical: function () {
-			return spec.size === 3;
+			return contiguousElements({ x: 0, y: 1 }) >= spec.connectionlength;
 		},
 
 		gameOver: function () {
@@ -62,7 +72,7 @@ var baseBoard = function (spec) {
 		play: function (){
 			while (!this.gameOver()) {
 				makeMove(generateRandomMove());
-				outputStatus(this.board);
+				outputStatus.apply(this);
 				this.advancePlayer();
 			}
 		}
@@ -77,7 +87,9 @@ var ticTacToe = baseBoard({
 		return this.connectionVertical();
 	},
 
-	placement: function (x, y) {
-		this.board[x][y] = this.player();
+	placement: function (board, x, y) {
+		board[x][y] = this.player();
+
+		return {x: x, y: y};
 	}
 });
