@@ -28,21 +28,23 @@ var baseBoard = function (spec) {
 		var x = Math.floor(Math.random()*spec.size),
 			y = Math.floor(Math.random()*spec.size);
 
-		return { x: x, y: y};
+		return { x: x, y: y };
 	};
 
-	var outputStatus = function () {
+	var iterateOverBoard = function (fn) {
 		for(var i = 0;i < spec.size;i++) {
-			var rowStr = "";
 			for(var j = 0; j < spec.size;j++) {
-				if (!board[i][j]) {
-					rowStr += "-";
-				} else {
-					rowStr += board[i][j];
-				}
+				fn(board[i][j], x, y);
 			}
-			console.log(rowStr);
 		}
+	}
+
+	var outputStatus = function () {
+		return iterateOverBoard(function (val, x, y) {
+			if (x === spec.size-1) {
+				
+			}
+		});
 	};
 
 	var advancePlayer = function () {
@@ -50,10 +52,23 @@ var baseBoard = function (spec) {
 		return this.player();
 	};
 
-	var inBoard
+	var numberInLine = function (origin, direction) {
+		var count = 0;
+		var comparer = board[origin.x][origin.y];
+		var current = { x: origin.x + direction.x, origin.y + direction.y };
+
+		while (board[current.x][current.y] === comparer) {
+			count++;
+		}
+
+		return count;
+	};
+
 	var contiguousElements = function (direction) {
 		var lastPlayer = board[lastMove.x][lastMove.y];
 		var origin = { x: lastMove.x, y: lastMove.y };
+
+		return 1 + numberInLine(origin, direction) + numberInLine(origin, { x: -1*direction.x, y: -1*direction.y });
 	};
 
 	return {
@@ -66,7 +81,7 @@ var baseBoard = function (spec) {
 		},
 
 		gameOver: function () {
-			return spec.completion.apply(this);
+			return spec.completion.apply(this) || ;
 		},
 
 		play: function (){
