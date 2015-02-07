@@ -34,7 +34,7 @@ ticTacToe: baseBoard({
 	// this can be extended to any amount, and the game
 	// will run in a round-robin style through them.
 	// this array cannot contain the boolean value 'false',
-	// bad things wil happen
+	// bad things will happen
 	players: ['A', 'B'],
 
 	// size is the size of the board. All boards are square.
