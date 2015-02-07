@@ -13,7 +13,7 @@ MATRIX_GAMES.ticTacToe.play();
 MATRIX_GAMES.connectFour.play();
 ```
 
-##### To Run Mega Tic Tac Toe:
+##### To run Mega Tic Tac Toe:
 ```js
 MATRIX_GAMES.megaTicTacToe.play();
 ```
