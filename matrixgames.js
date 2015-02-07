@@ -21,6 +21,25 @@ Number.prototype.toArray = function () {
 	return arr;
 };
 
+Object.prototype.extend = function (newObj) {
+	var obj = {};
+
+	// wholesale copy from existing object
+	for (var prop in this) {
+		if (this.hasOwnProperty(prop)) {
+			obj[prop] = this[prop];	
+		}
+	}
+
+	// overlap props from new object
+	for (var prop in newObj) {
+		if (newObj.hasOwnProperty(prop)) {
+			obj[prop] = newObj[prop];
+		}
+	}
+
+	return obj;
+}
 
 var MATRIX_GAMES = (function () { 
 	/* baseBoard -- Game generator. Builds games and executes gameplay. */
@@ -34,15 +53,15 @@ var MATRIX_GAMES = (function () {
 			board = Array.matrix(spec.size, false);
 			lastMove = null;
 			playerIndex = 0;
-		};
+		}
 
 		function getCurrentPlayer() {
 			return spec.players[playerIndex];
-		};
+		}
 
 		function makeMove(move) {
 			lastMove = spec.placement(board, move.x, move.y);
-		};
+		}
 
 		function generateRandomMove() {
 			var x = 0, y = 0;
@@ -53,7 +72,7 @@ var MATRIX_GAMES = (function () {
 			} while (board[x][y] !== false);
 			
 			return { x: x, y: y };
-		};
+		}
 
 		function iterateOverBoard(fn) {
 			for(var i = 0;i < spec.size;i++) {
@@ -65,35 +84,17 @@ var MATRIX_GAMES = (function () {
 			}
 		}
 
-		function outputStatus() {
-			console.log("******************");
-
-			var outputStr = "";
-
-			iterateOverBoard(function (val, x, y) {
-				outputStr += val === false ? "-" : val;
-
-				if (x === spec.size-1) {
-					console.log(outputStr);
-					outputStr = "";
-				}
-			});
-
-			console.log("\n");
-
-			var winner = this.isGameOver();
-
-			console.log("GAMEOVER? " + (winner ? winner === true ? "True" : "True (winner is: " + winner + ")" :  "False"));
-		};
-
 		function advancePlayer() {
 			playerIndex = (playerIndex + 1) % spec.players.length;
 			return getCurrentPlayer();
-		};
+		}
 
 		function numberInLine(origin, direction) {
 			var count = 0;
 			var comparer = board[origin.x][origin.y];
+
+			// direction.x and direction.y are either:
+			// -1, 0, or 1.
 			var current = { 
 				x: origin.x + direction.x, 
 				y: origin.y + direction.y 
@@ -108,7 +109,7 @@ var MATRIX_GAMES = (function () {
 			}
 
 			return count;
-		};
+		}
 
 		function contiguousElements(direction) {
 			if (lastMove != null) {
@@ -119,10 +120,51 @@ var MATRIX_GAMES = (function () {
 			} else { 
 				return 0;
 			}
-		};
+		}		
 
 		// protected baseBoard methods
 		return {
+			outputStatus: function () {
+				console.log("******************");
+
+				var outputStr = "";
+
+				iterateOverBoard(function (val, x, y) {
+					outputStr += val === false ? "-" : val;
+
+					if (x === spec.size-1) {
+						console.log(outputStr);
+						outputStr = "";
+					}
+				});
+
+				console.log("\n");
+
+				var winner = this.isGameOver();
+
+				console.log("GAMEOVER? " + 
+					(winner ? 
+						winner === true ? "True" : "True (winner is: " + winner + ")" :  
+						"False"
+					)
+				);
+			},
+
+			isGameOver: function() {
+				if (spec.completion.apply(this) === true) {
+					return getCurrentPlayer();
+				}
+
+				var fullBoard = true;
+
+				iterateOverBoard(function (val, x, y) {
+					if (val === false) {
+						return fullBoard = false;
+					}
+				});
+
+				return fullBoard;
+			},
 			makeMove: function (move) {
 				lastMove = spec.placement.call(this, board, move.x, move.y);
 			},
@@ -145,28 +187,12 @@ var MATRIX_GAMES = (function () {
 
 			connectionDiagonalLeft: function () {
 				return contiguousElements({ x: -1, y: -1 }) >= spec.connectionLength;
-			},
-
-			isGameOver: function () {
-				var fullBoard = true;
-
-				iterateOverBoard(function (val, x, y) {
-					if (val === false) {
-						return fullBoard = false;
-					}
-				});
-				
-				if (spec.completion.apply(this) === true) {
-					return getCurrentPlayer();
-				} 
-
-				return fullBoard;
-			},
+			},			
 
 			play: function (){
 				while (this.isGameOver() === false) {
 					this.makeMove(generateRandomMove());
-					outputStatus.apply(this);
+					this.outputStatus();
 					advancePlayer();
 				}
 
@@ -175,29 +201,28 @@ var MATRIX_GAMES = (function () {
 		};
 	};
 
+	var defaults = {
+		players: ['A', 'B'],
+		completion: function () {
+			return this.connectionHorizontal() || this.connectionVertical() || this.connectionDiagonalRight() || this.connectionDiagonalLeft();
+		},
+
+		placement: function (board, x, y) {
+			board[x][y] = this.player();
+
+			return { x: x, y: y };
+		}
+	};
+
 	return {
-		ticTacToe: baseBoard({
-			players: ['A', 'B'],
+		ticTacToe: baseBoard(defaults.extend({
 			size: 3,
-			connectionLength: 3,
-			completion: function () {
-				return this.connectionHorizontal() || this.connectionVertical() || this.connectionDiagonalRight() || this.connectionDiagonalLeft();
-			},
+			connectionLength: 3
+		})),
 
-			placement: function (board, x, y) {
-				board[x][y] = this.player();
-
-				return { x: x, y: y };
-			}
-		}),
-
-		connectFour: baseBoard({
-			players: ['A', 'B'],
+		connectFour: baseBoard(defaults.extend({
 			size: 6,
 			connectionLength: 4,
-			completion: function () {
-				return this.connectionHorizontal() || this.connectionVertical() || this.connectionDiagonalRight() || this.connectionDiagonalLeft();
-			},
 
 			placement: function (board, x, y) {
 				// in connect four, the play drops 
@@ -210,21 +235,14 @@ var MATRIX_GAMES = (function () {
 
 				return { x: x, y: y };
 			}
-		}),
+		})),
 
-		megaTicTacToe: baseBoard({
-			players: ['A', 'B'],
+		megaTicTacToe: baseBoard(defaults.extend({
 			size: 8,
 			connectionLength: 3,
 			completion: function () {
 				return this.connectionHorizontal() || this.connectionVertical();
-			},
-
-			placement: function (board, x, y) {
-				board[x][y] = this.player();
-
-				return { x: x, y: y };
 			}
-		})
+		}))
 	}
 }());

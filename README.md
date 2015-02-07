@@ -2,6 +2,8 @@
 
 ###Usage:
 
+Open index.html in a web browser, open the JS console in said browser.
+
 ##### To run Tic Tac Toe:
 ```js
 MATRIX_GAMES.ticTacToe.play();
