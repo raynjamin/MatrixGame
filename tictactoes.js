@@ -10,6 +10,16 @@ Array.matrix = function (m, initial) {
     return mat;
 };
 
+Number.prototype.toArray = function (cb) {
+	var arr = [];
+
+	for( var i = 0;i < this;i++ ) {
+		arr.push(false);
+	}
+
+	return arr;
+};
+
 var baseBoard = function (spec) {
 	var players = ['A', 'B'];
 	var playerIndex, board, lastMove = null;
@@ -52,6 +62,8 @@ var baseBoard = function (spec) {
 	}
 
 	var outputStatus = function () {
+		console.log("******************");
+
 		var outputStr = "";
 
 		iterateOverBoard(function (val, x, y) {
@@ -173,6 +185,41 @@ var ticTacToe = baseBoard({
 	placement: function (board, x, y) {
 		board[x][y] = this.player();
 
-		return {x: x, y: y};
+		return { x: x, y: y };
+	}
+});
+
+var connectFour = baseBoard({
+	size: 6,
+	connectionLength: 4,
+
+	completion: function () {
+		return this.connectionHorizontal() || this.connectionVertical() || this.connectionDiagonalRight() || this.connectionDiagonalLeft();
+	},
+
+	placement: function (board, x, y) {
+		// in connect four, the play drops 
+		// all the way down.
+		while (board[x][y+1] === false) {
+			y++;
+		}
+
+		board[x][y] = this.player();
+
+		return { x: x, y: y };
+	}
+});
+
+var megaTicTacToe = baseBoard({
+	size: 8,
+	connectionLength: 3,
+	completion: function () {
+		return this.connectionHorizontal() || this.connectionVertical();
+	},
+
+	placement: function (board, x, y) {
+		board[x][y] = this.player();
+
+		return { x: x, y: y };
 	}
 });
