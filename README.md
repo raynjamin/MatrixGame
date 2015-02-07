@@ -26,7 +26,7 @@ defined in the requirements specification).
 Each game is an instantiation of a private function inside MATRIX_GAMES, called 
 baseBoard.
 
-From the source (all parameters are required, there are no defaults):
+Here is an example of a valid object passed into baseBoard:
 
 ```js
 ticTacToe: baseBoard({
