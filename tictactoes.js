@@ -11,14 +11,14 @@ Array.matrix = function (m, initial) {
 };
 
 var baseBoard = function (spec) {
+	var players = ['A', 'B'];
+	var playerIndex, board, lastMove = null;
+
 	var initGame = function () {
 		board = Array.matrix(spec.size, false);
 		lastMove = null;
 		playerIndex = 0;
-	};
-
-	var players = ['A', 'B'];
-	var playerIndex, board, lastMove = null;
+	};	
 
 	initGame();
 
@@ -36,7 +36,6 @@ var baseBoard = function (spec) {
 		do {
 			x = Math.floor(Math.random()*spec.size),
 			y = Math.floor(Math.random()*spec.size);
-
 		} while (board[x][y] !== false);
 		
 		return { x: x, y: y };
@@ -87,6 +86,8 @@ var baseBoard = function (spec) {
 			y: origin.y + direction.y 
 		};
 
+		// outputStatus();
+
 		while (
 			board[current.x] !== undefined && 
 			board[current.x][current.y] === comparer) {
@@ -103,9 +104,7 @@ var baseBoard = function (spec) {
 			var lastPlayer = board[lastMove.x][lastMove.y];
 			var origin = { x: lastMove.x, y: lastMove.y };
 
-			return 1 
-				+ numberInLine(origin, direction)
-				+ numberInLine(origin, { x: -1*direction.x, y: -1*direction.y });
+			return 1 + numberInLine(origin, direction) + numberInLine(origin, { x: -1*direction.x, y: -1*direction.y });
 		} else { 
 			return 0;
 		}
@@ -121,15 +120,19 @@ var baseBoard = function (spec) {
 		},
 		
 		connectionVertical: function () {
-			return contiguousElements({ x: 0, y: 1 }) >= spec.connectionlength;
+			return contiguousElements({ x: 0, y: 1 }) >= spec.connectionLength;
+		},
+
+		connectionHorizontal: function () {
+			return contiguousElements({ x: 1, y: 0 }) >= spec.connectionLength;
 		},
 
 		connectionDiagonalRight: function () {
-			return contiguousElements({ x: 1, y: 1 }) >= spec.connectionlength;
+			return contiguousElements({ x: 1, y: -1 }) >= spec.connectionLength;
 		},
 
 		connectionDiagonalLeft: function () {
-			return contiguousElements({ x: -1, y: 1 }) >= spec.connectionlength;
+			return contiguousElements({ x: -1, y: -1 }) >= spec.connectionLength;
 		},
 
 		gameOver: function () {
@@ -164,7 +167,7 @@ var ticTacToe = baseBoard({
 	size: 3,
 	connectionLength: 3,
 	completion: function () {
-		return this.connectionVertical() || this.connectionDiagonalRight() || this.connectionDiagonalLeft();
+		return this.connectionHorizontal() || this.connectionVertical() || this.connectionDiagonalRight() || this.connectionDiagonalLeft();
 	},
 
 	placement: function (board, x, y) {
