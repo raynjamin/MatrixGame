@@ -8,12 +8,12 @@ Open index.html in a web browser, open the JS console in said browser.
 ```js
 MATRIX_GAMES.ticTacToe.play();
 ```
-#### To run Connect Four:
+##### To run Connect Four:
 ```js
 MATRIX_GAMES.connectFour.play();
 ```
 
-####To Run Mega Tic Tac Toe:
+##### To Run Mega Tic Tac Toe:
 ```js
 MATRIX_GAMES.megaTicTacToe.play();
 ```
