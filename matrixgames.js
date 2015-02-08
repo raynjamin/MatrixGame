@@ -112,14 +112,14 @@ var MATRIX_GAMES = (function () {
 		}
 
 		function contiguousElements(direction) {
-			if (lastMove != null) {
-				var lastPlayer = board[lastMove.x][lastMove.y];
-				var origin = { x: lastMove.x, y: lastMove.y };
-
-				return 1 + numberInLine(origin, direction) + numberInLine(origin, { x: -1*direction.x, y: -1*direction.y });
-			} else { 
+			if (lastMove === null) {
 				return 0;
 			}
+
+			var lastPlayer = board[lastMove.x][lastMove.y];
+			var origin = { x: lastMove.x, y: lastMove.y };
+
+			return 1 + numberInLine(origin, direction) + numberInLine(origin, { x: -1*direction.x, y: -1*direction.y });
 		}		
 
 		// protected baseBoard methods
@@ -165,6 +165,7 @@ var MATRIX_GAMES = (function () {
 
 				return fullBoard;
 			},
+
 			makeMove: function (move) {
 				lastMove = spec.placement.call(this, board, move.x, move.y);
 			},
@@ -189,7 +190,7 @@ var MATRIX_GAMES = (function () {
 				return contiguousElements({ x: -1, y: -1 }) >= spec.connectionLength;
 			},			
 
-			play: function (){
+			play: function () {
 				while (this.isGameOver() === false) {
 					this.makeMove(generateRandomMove());
 					this.outputStatus();
