@@ -8,12 +8,12 @@ Open index.html in a web browser, open the JS console in said browser.
 ```js
 MATRIX_GAMES.ticTacToe.play();
 ```
-#### To run Connect Four:
+##### To run Connect Four:
 ```js
 MATRIX_GAMES.connectFour.play();
 ```
 
-####To Run Mega Tic Tac Toe:
+##### To run Mega Tic Tac Toe:
 ```js
 MATRIX_GAMES.megaTicTacToe.play();
 ```
@@ -26,7 +26,7 @@ defined in the requirements specification).
 Each game is an instantiation of a private function inside MATRIX_GAMES, called 
 baseBoard.
 
-From the source (all parameters are required, there are no defaults):
+Here is an example of a valid object passed into baseBoard:
 
 ```js
 ticTacToe: baseBoard({
@@ -34,7 +34,7 @@ ticTacToe: baseBoard({
 	// this can be extended to any amount, and the game
 	// will run in a round-robin style through them.
 	// this array cannot contain the boolean value 'false',
-	// bad things wil happen
+	// bad things will happen
 	players: ['A', 'B'],
 
 	// size is the size of the board. All boards are square.
