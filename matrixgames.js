@@ -39,7 +39,7 @@ Object.prototype.extend = function (newObj) {
 	}
 
 	return obj;
-}
+};
 
 var MATRIX_GAMES = (function () { 
 	/* baseBoard -- Game generator. Builds games and executes gameplay. */
