@@ -134,3 +134,4 @@ module.exports = function (grunt) {
 
 // TODO: Clean main.js after dist build
 // TODO: Source Map for minified JavaScript file
+// TODO: Deploy task to push to gh-pages branch
