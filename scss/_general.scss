@@ -1,0 +1,62 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #000;
+  background-image: linear-gradient(to bottom, $background-color, $background-color 50%, #000 50%, #000);
+  background-size: 100% 4px;
+  box-shadow: 0 0 1000px 30px #000 inset;
+  font-family: $font-family;
+  transition: background-color 1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation-direction: alternate;
+  animation-duration: 5s;
+  animation-name: bg;
+  animation-iteration-count: infinite;
+  transform: rotate(.5deg);
+}
+
+h1 {
+  color: $light-blue;
+  font-size: 3em;
+  margin: 0;
+  padding: 0;
+  animation-duration: .2s, 2s;
+  animation-name: textFlicker, textShadow;
+  animation-iteration-count: infinite;
+  text-transform: uppercase;
+}
+
+@keyframes textFlicker {
+  0% { opacity: .35 }
+  30% { opacity: .4 }
+  68% { opacity: .39 }
+  100% { opacity: .36 }
+}
+
+@keyframes textShadow {
+  0% { text-shadow: 0 0 5px #fff }
+  25% { text-shadow: 0 0 6px #fff }
+  40% { text-shadow: 0 0 4px #fff }
+  65% { text-shadow: 0 0 5px #fff, -1px -1px 0 #0f0, 1px 1px 0 #f00; }
+  75% { text-shadow: 0 0 5px #fff }
+  90% { text-shadow: 0 0 4px #fff }
+  100% { text-shadow: 0 0 5px #fff, -1px -1px 0 #0f0, 1px 1px 0 #f00; }
+}
+
+@keyframes bg {
+  0% { background-position: 0 3px; }
+  10% { background-position: 0 0; }
+  100% { background-position: 0 3px; }
+}
