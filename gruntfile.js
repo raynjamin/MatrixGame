@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 module.exports = function (grunt) {
 
   var paths = {
@@ -43,7 +43,7 @@ module.exports = function (grunt) {
       },
       js: {
         files: "js/**/*.js",
-        tasks: ['concat', 'captain_hook:dev']
+        tasks: ['jshint', 'concat', 'captain_hook:dev']
       },
       html: {
         files: paths.html,
@@ -112,13 +112,25 @@ module.exports = function (grunt) {
         cssFiles: ['css/**/*.min.css'],
         targetHtml: ['index.html']
       }
-    }
+    },
+
+    jshint: {
+      options: {
+        jshintrc: true
+      },
+      all: ['Gruntfile.js', 'js/**/*.js']
+    },
+
+    clean: ['dist']
 
   });
 
   require('load-grunt-tasks')(grunt);
 
-  grunt.registerTask('default', ['copy', 'sass:dev', 'concat', 'autoprefixer:dev', 'captain_hook:dev', 'browserSync', 'watch']);
-  grunt.registerTask('dist', ['copy', 'sass:dist', 'concat', 'autoprefixer:dist', 'uglify', 'captain_hook:dist']);
+  grunt.registerTask('default', ['clean', 'copy', 'sass:dev', 'jshint', 'concat', 'autoprefixer:dev', 'captain_hook:dev', 'browserSync', 'watch']);
+  grunt.registerTask('dist', ['clean', 'copy', 'sass:dist', 'jshint', 'concat', 'autoprefixer:dist', 'uglify', 'captain_hook:dist']);
 
-}
+};
+
+// TODO: Clean main.js after dist build
+// TODO: Source Map for minified JavaScript file

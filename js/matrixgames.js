@@ -3,8 +3,6 @@ var MATRIX_GAMES = (function () {
 	var baseBoard = function (spec) {
 		var playerIndex, board, lastMove = null;
 
-		initGame();
-
 		// private baseBoard methods
 		function initGame() {
 			board = matrix(spec.size, false);
@@ -24,8 +22,8 @@ var MATRIX_GAMES = (function () {
 			var x = 0, y = 0;
 
 			do {
-				x = Math.floor(Math.random()*spec.size),
-				y = Math.floor(Math.random()*spec.size);
+				x = Math.floor(Math.random() * spec.size);
+				y = Math.floor(Math.random() * spec.size);
 			} while (board[x][y] !== false);
 
 			return { x: x, y: y };
@@ -78,6 +76,8 @@ var MATRIX_GAMES = (function () {
 
 			return 1 + numberInLine(origin, direction) + numberInLine(origin, { x: -1*direction.x, y: -1*direction.y });
 		}
+
+		initGame();
 
 		// protected baseBoard methods
 		return {
@@ -202,5 +202,5 @@ var MATRIX_GAMES = (function () {
 				return this.connectionHorizontal() || this.connectionVertical();
 			}
 		}))
-	}
+	};
 }());

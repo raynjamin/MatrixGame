@@ -10,24 +10,25 @@ function matrix(m, initial) {
         mat[i] = a;
     }
     return mat;
-};
+}
 
 function extend(oldObj, newObj) {
 	var obj = {};
+  var prop;
 
 	// wholesale copy from existing object
-	for (var prop in oldObj) {
+	for (prop in oldObj) {
 		if (oldObj.hasOwnProperty(prop)) {
 			obj[prop] = oldObj[prop];
 		}
 	}
 
 	// overlap props from new object
-	for (var prop in newObj) {
+	for (prop in newObj) {
 		if (newObj.hasOwnProperty(prop)) {
 			obj[prop] = newObj[prop];
 		}
 	}
 
 	return obj;
-};
+}
