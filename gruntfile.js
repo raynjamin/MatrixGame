@@ -1,11 +1,6 @@
 "use strict";
 module.exports = function (grunt) {
 
-  var paths = {
-    html: ['**/*.html', '!node_modules/**/*.html', '!dist/**/*.html'],
-    fonts: 'fonts/**/*'
-  };
-
   grunt.initConfig({
 
     sass: {
@@ -13,7 +8,7 @@ module.exports = function (grunt) {
         options: {
           sourceMap: true
         },
-        src: 'scss/main.scss',
+        src: 'app/scss/main.scss',
         dest: 'dist/css/main.css'
       },
       dist: {
@@ -21,7 +16,7 @@ module.exports = function (grunt) {
           outputStyle: 'compressed',
           sourceMap: true
         },
-        src: '<%= sass.dev.src %>',
+        src: 'app/scss/main.scss',
         dest: 'dist/css/main.min.css'
       }
     },
@@ -31,22 +26,22 @@ module.exports = function (grunt) {
         options: {
           sourceMap: true
         },
-        src: ['js/**/*.js'],
+        src: ['app/js/**/*.js'],
         dest: 'dist/js/main.js'
       }
     },
 
     watch: {
       scss: {
-        files: "scss/**/*.scss",
+        files: 'app/scss/**/*.scss',
         tasks: ['sass:dev', 'autoprefixer:dev', 'captain_hook:dev']
       },
       js: {
-        files: "js/**/*.js",
+        files: 'app/js/**/*.js',
         tasks: ['jshint', 'concat', 'captain_hook:dev']
       },
       html: {
-        files: paths.html,
+        files: 'app/**/*.html',
         tasks: ['copy:html', 'captain_hook:dev']
       }
     },
@@ -84,13 +79,15 @@ module.exports = function (grunt) {
 
     copy: {
       html: {
-        src: paths.html,
-        dest: 'dist',
+        cwd: 'app/',
+        src: '**/*.html',
+        dest: 'dist/',
         expand: true
       },
       fonts: {
-        src: paths.fonts,
-        dest: 'dist',
+        cwd: 'app/',
+        src: 'fonts/**/*',
+        dest: 'dist/',
         expand: true
       }
     },
@@ -118,7 +115,7 @@ module.exports = function (grunt) {
       options: {
         jshintrc: true
       },
-      all: ['Gruntfile.js', 'js/**/*.js']
+      all: ['Gruntfile.js', 'app/js/**/*.js']
     },
 
     clean: ['dist']
